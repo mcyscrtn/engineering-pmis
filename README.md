@@ -70,3 +70,12 @@ New sign-ups default to `viewer`. An administrator should assign the correct rol
 
 ## Data handling
 Use company-approved accounts, retention rules, and access policies. Avoid uploading confidential drawings or client documents until the storage access policies and backup settings have been reviewed and approved by your IT/security administrator.
+
+## Deliverables module upgrade (v1.1)
+1. In Supabase SQL Editor, run `supabase/migrations/002_deliverables_progress.sql` once. It is designed to be rerunnable and does not drop existing project or deliverable records.
+2. Upload/replace the updated `src/app/page.tsx` and `src/app/globals.css` in your private GitHub repository. Also upload the new migration file under `supabase/migrations/`.
+3. Commit the changes. Vercel should automatically build and deploy from the connected GitHub repository.
+4. Open the Deliverables section, select a project, and add deliverables. The supported disciplines are Architectural, Structural, Civil, Electrical, Mechanical, Plumbing, Fire Protection, Instrumentation & Controls, Costing, and Other.
+5. Project progress is calculated in the database as the rounded arithmetic mean of all deliverable progress values. A project with no deliverables remains at 0%. Marking a deliverable Completed sets it to 100% and records today's actual submission date if one was not supplied.
+
+The migration enables Realtime publication for deliverables and installs a database trigger for progress roll-up. The frontend subscribes to project and deliverable changes. RLS remains enabled; existing policies still determine who can view and manage records. Test with separate admin, engineer, and viewer accounts before wider rollout.
